@@ -2,7 +2,7 @@
 Live coding with your friends
 ___
 # Запуск
-![](https://github.com/DarkShadow19/Live-code-share/for_git.gif)
+![](for_git.gif)
 В каталоге **/src/Client/** и **/src/Server/** находиться пока
 единственный класс с входной точкой выполнения.
 Пример запуска:
