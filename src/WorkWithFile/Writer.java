@@ -1,7 +1,19 @@
 package WorkWithFile;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class Writer {
-    public static void Write(String filename, String data) {
-        //TODO: write file recording
+    /**
+     * @param filename
+     * @param data
+     * @throws IOException
+     */
+    public static void Write(String filename, String data) throws IOException {
+        FileOutputStream outputStream = new FileOutputStream(filename);
+        byte[] buffer = data.getBytes();
+
+        outputStream.write(buffer);
+        outputStream.close();
     }
 }
