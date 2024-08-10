@@ -10,7 +10,9 @@ public class MainClient {
         Socket clientSocket = new Socket("127.0.0.1", 6006);
         Transfer transfer = new Transfer(clientSocket.getInputStream(), clientSocket.getOutputStream());
 
-        transfer.Send("Привет, напиши что-нибудь: ");
+        System.out.println("Привет, напиши текст!");
+        String word = transfer.GetTerminal();
+        transfer.Send(word);
         transfer.Get();
 
         clientSocket.close();

@@ -12,7 +12,9 @@ public class MainServer {
         Socket clientSocket = server.accept();
         Transfer transfer = new Transfer(clientSocket.getInputStream(), clientSocket.getOutputStream());
 
+        System.out.println("Сервер ожидает сообщение");
         String word = transfer.Get();
+        System.out.println(word);
         transfer.Send("Привет, это Сервер! Подтверждаю, вы наисали : " + word + "\n");
 
 
