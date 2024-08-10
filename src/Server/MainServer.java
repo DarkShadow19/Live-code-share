@@ -18,5 +18,6 @@ public class MainServer {
 
         clientSocket.close();
         transfer.close();
+        server.close();
     }
 }
