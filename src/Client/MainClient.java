@@ -1,36 +1,19 @@
 package Client;
+import simpleNetwork.Transfer;
+
 import java.io.*;
 import java.net.Socket;
 
 public class MainClient {
 
-    private static Socket clientSocket;
-    private static BufferedReader reader;
-    private static BufferedReader in;
-    private static BufferedWriter out;
+    public static void main(String[] args) throws IOException {
+        Socket clientSocket = new Socket("127.0.0.1", 6006);
+        Transfer transfer = new Transfer(clientSocket.getInputStream(), clientSocket.getOutputStream());
 
-    public static void main(String[] args) {
-        try {
-            try {
-                clientSocket = new Socket("127.0.0.1", 6006);
-                reader = new BufferedReader(new InputStreamReader(System.in));
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+        transfer.Send("Привет, напиши что-нибудь: ");
+        transfer.Get();
 
-                System.out.println("Вы что-то хотели сказать? Введите это здесь: ");
-                String word = reader.readLine();
-                out.write(word + "\n");
-                out.flush();
-                String serverWord = in.readLine();
-                System.out.println(serverWord);
-            } finally {
-                System.out.println("Клиент был закрыт...");
-                clientSocket.close();
-                in.close();
-                out.close();
-            }
-        } catch (IOException e) {
-            System.err.println(e);
-        }
-    }
+        clientSocket.close();
+        transfer.close();
+    } 
 }
