@@ -15,7 +15,7 @@ public class MainServer {
         System.out.println("Сервер ожидает сообщение");
         String word = transfer.Get();
         System.out.println(word);
-        transfer.Send("Привет, это Сервер! Подтверждаю, вы наисали : " + word + "\n");
+        transfer.Send("Ne " + word + "-" + word +  " mne tut");
 
 
         clientSocket.close();
