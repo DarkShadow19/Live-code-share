@@ -27,6 +27,7 @@ public class Transfer implements Closeable{
      */
     public void Send(String message) throws IOException {
         outputStream.writeUTF(message);
+        outputStream.flush();
     }
 
     /**

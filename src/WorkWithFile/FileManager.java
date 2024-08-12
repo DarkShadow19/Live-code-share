@@ -1,6 +1,7 @@
 package WorkWithFile;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class FileManager {
     HashMap<String, String> files;
@@ -15,6 +16,10 @@ public class FileManager {
 
     public String Get(String filename) {
         return files.get(filename);
+    }
+
+    public Set<String> GetKeys() {
+        return files.keySet();
     }
 
     public void Remove(String filename) {

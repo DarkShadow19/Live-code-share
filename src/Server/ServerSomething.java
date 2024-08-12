@@ -7,20 +7,23 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ServerSomething extends Thread {
-    static final String EOF = "Feni to la";
-    private final Socket socket;
+    static final String EOF = "435098234037";
     private final Transfer transfer;
 
     public ServerSomething(Socket socket) throws IOException {
-        this.socket = socket;
         transfer = new Transfer(socket.getInputStream(), socket.getOutputStream());
         start();
     }
 
     @Override
     public void run() {
-        //TODO: Logic for server
-        System.out.println("abobus");
+        try {
+            transfer.Send(MainServer.manager.GetKeys().toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
         try {
             transfer.close();
         } catch (IOException e) {
