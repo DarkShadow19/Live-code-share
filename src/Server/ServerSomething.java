@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ServerSomething extends Thread {
-    static final String EOF = "435098234037";
     private final Transfer transfer;
 
     public ServerSomething(Socket socket) throws IOException {
@@ -32,15 +31,6 @@ public class ServerSomething extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void SendFiles(BufferedReader file) throws IOException {
-        while(file.ready()) {
-            String line = file.readLine();
-            System.out.println(line);
-            transfer.Send(line);
-        }
-        transfer.Send(EOF);
     }
 
     private void sendFile() throws IOException {

@@ -9,7 +9,7 @@ public class Writer {
      * @param data
      * @throws IOException
      */
-    public static void Write(String filename, String data) throws IOException {
+    public static void write(String filename, String data) throws IOException {
         FileOutputStream outputStream = new FileOutputStream(filename);
         byte[] buffer = data.getBytes();
 

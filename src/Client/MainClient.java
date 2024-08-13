@@ -1,5 +1,6 @@
 package Client;
 import WorkWithFile.FileManager;
+import WorkWithFile.Writer;
 import simpleNetwork.Transfer;
 
 import java.io.*;
@@ -9,8 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MainClient {
-    static final String EOF = "435098234037";
     private static final FileManager manager = new FileManager();
+    private static final String clientDir = "/home/nlx/clientFolder/";
     public static void main(String[] args) throws IOException {
         Socket clientSocket = new Socket("localhost", 6006);
         Transfer transfer = new Transfer(clientSocket.getInputStream(), clientSocket.getOutputStream());
@@ -20,20 +21,10 @@ public class MainClient {
         Set<String> newFile = CheckFile(files);
         downloadFile(newFile, transfer);
 
-        readManager(manager);
+        readManager();
 
         clientSocket.close();
         transfer.close();
-    }
-
-    private static void GetFileFromNetwork(Transfer transfer) throws IOException {
-        String line;
-        while(true) {
-            line = transfer.Get();
-            if (line.equalsIgnoreCase(EOF))
-                break;
-            System.out.println(line);
-        }
     }
 
     private static Set<String> CheckFile(String files) {
@@ -52,16 +43,27 @@ public class MainClient {
             try {
                 transfer.Send(name);
                 manager.Add(name, transfer.Get());
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException _) {
+                System.out.println("Пропущен файл по ошибке в MainClient.downloadFile()");
             }
         }
         transfer.Send("getFiles: end");
+        saveFile();
     }
 
-    private static void readManager(FileManager man) {
-        for (String name : man.GetKeys()) {
-            System.out.println(String.join(" содержит:\n", name, man.Get(name)));
+    private static void saveFile() {
+        for (String name : manager.GetKeys()) {
+            try {
+                Writer.write(clientDir + name, manager.Get(name));
+            } catch (IOException e) {
+                System.out.println("Не записан файл по ошибке IOException in Write.write() by MainClient.saveFile()");
+            }
+        }
+    }
+
+    private static void readManager() {
+        for (String name : MainClient.manager.GetKeys()) {
+            System.out.println(String.join(" содержит:\n", name, MainClient.manager.Get(name)));
         }
     }
 }
