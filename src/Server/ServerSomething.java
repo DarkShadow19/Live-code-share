@@ -19,6 +19,9 @@ public class ServerSomething extends Thread {
     public void run() {
         try {
             transfer.Send(MainServer.manager.GetKeys().toString());
+            String command = transfer.Get();
+            if ("getFiles:".equalsIgnoreCase(command))
+                sendFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -31,12 +34,21 @@ public class ServerSomething extends Thread {
         }
     }
 
-    private static void SendFile(Transfer transfer, BufferedReader file) throws IOException {
+    private void SendFiles(BufferedReader file) throws IOException {
         while(file.ready()) {
             String line = file.readLine();
             System.out.println(line);
             transfer.Send(line);
         }
         transfer.Send(EOF);
+    }
+
+    private void sendFile() throws IOException {
+        while (true) {
+            String file = transfer.Get();
+            if ("getFiles: end".equalsIgnoreCase(file))
+                    break;
+            transfer.Send(MainServer.manager.Get(file));
+        }
     }
 }

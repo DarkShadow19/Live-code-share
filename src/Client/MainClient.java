@@ -7,18 +7,20 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.SortedSet;
 
 public class MainClient {
     static final String EOF = "435098234037";
-    private static FileManager manager = new FileManager();;
-    public static void main(String[] args) throws IOException, InterruptedException {
+    private static final FileManager manager = new FileManager();
+    public static void main(String[] args) throws IOException {
         Socket clientSocket = new Socket("localhost", 6006);
         Transfer transfer = new Transfer(clientSocket.getInputStream(), clientSocket.getOutputStream());
 
         String files = transfer.Get();
-        System.out.println(files);
-        CheckFile(files);
+        System.out.println("На свервере есть: " + files);
+        Set<String> newFile = CheckFile(files);
+        downloadFile(newFile, transfer);
+
+        readManager(manager);
 
         clientSocket.close();
         transfer.close();
@@ -34,13 +36,32 @@ public class MainClient {
         }
     }
 
-    private static void CheckFile(String files) {
-//    private static void CheckFile() {
+    private static Set<String> CheckFile(String files) {
         Set<String> localFiles = manager.GetKeys();
-        System.out.println(localFiles);
+        System.out.println("На кленте храняться файлы: " + localFiles);
         String external = files.substring(1, files.length()-1);
-        Set<String> exte = new HashSet<>(Arrays.asList(external.split(", ")));
+        Set<String> externalFile = new HashSet<>(Arrays.asList(external.split(", ")));  //Список полученный с сервера
 
-        System.out.println(external);
+        externalFile.removeAll(localFiles);     //вычитаем из него файлы, которые есть на клиенте
+        return externalFile;
+    }
+
+    private static void downloadFile(Set<String> files, Transfer transfer) throws IOException {
+        transfer.Send("getFiles:");
+        for (String name : files) {
+            try {
+                transfer.Send(name);
+                manager.Add(name, transfer.Get());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        transfer.Send("getFiles: end");
+    }
+
+    private static void readManager(FileManager man) {
+        for (String name : man.GetKeys()) {
+            System.out.println(String.join(" содержит:\n", name, man.Get(name)));
+        }
     }
 }
