@@ -2,7 +2,6 @@ package Server;
 
 import simpleNetwork.Transfer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.Socket;
 
